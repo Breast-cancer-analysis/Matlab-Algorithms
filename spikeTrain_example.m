@@ -12,24 +12,31 @@ clc
 % wm_none_active_tcs_filt
 
 % '../468/cancer_cancer20220308_slip3_area2_long_acq_cancer20220308_slip3_area2_long_acq_blue_0.112_green_0.0673_L468_1_data.csv'
-filename = '231_none_active_tcs_filt';
+filename = '468_none_active_tcs_filt';
 file = strcat(['../data/',filename,'.csv']);
 name = strrep(filename,'_',' ');
 M = readmatrix(file);
 M = M(2:end,4:end);
 
-% Shuffle in every cell
-% scram = spike_train(:,randperm(size(spike_train, 2)));
-
+%%
 
 % For original signal
 signal = M;
 samp_t = 0.2;
 time = 0:samp_t:samp_t*(length(signal)-1);
 
+
 % Generate spike train and time bins
 % Taking values 2.5 std less than 1
-[spike_trains,bins] = getSpikeTrain(signal,1,'negative');
+[spike_trains,bins,th] = getSpikeTrain(signal,1,'negative',0.007);
+
+%%
+% Plot the rastor for the whole cell line
+figure; %(1:50,:)
+plotSpikeRaster(logical(spike_trains(1:50,:)),'PlotType','imagesc','TimePerBin',1);
+ax = 0:100:1000;
+xticks(ax);
+xlabel('Time (s)')
 
 %% 
 % % Distribution of time lags between spikes
@@ -49,14 +56,6 @@ time = 0:samp_t:samp_t*(length(signal)-1);
 % ylabel('number of cells with the total spike (within the bins)')
 % title(['Distribution of the number of spikes: ',name]);
 
-
-%%
-% Plot the rastor for the whole cell line
-figure;
-plotSpikeRaster(logical(spike_trains),'PlotType','imagesc','TimePerBin',1);
-ax = 0:100:1000;
-xticks(ax);
-xlabel('Time (s)')
 
 % % Plot original signal and binary spike train per line of signal
 % for i = 3

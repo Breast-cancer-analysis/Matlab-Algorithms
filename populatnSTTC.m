@@ -11,7 +11,7 @@ clc
 % T47D_none_active_tcs_filt
 % wm_none_active_tcs_filt
 
-filename = 'wm';
+filename = '468';
 
 myDir = join(['/Users/treviyek/Documents/cancer_data/sorted_data/',filename]); %gets directory
 myFiles = dir(fullfile(myDir,'*.csv'));
@@ -37,24 +37,46 @@ for n = 1:length(myFiles)
     % ind = new_ind;
 
     len = size(M,1);
-    coeff = [];
+
+    % variables setup
+    coeff1 = [];
+    coeff5 = [];
+    coeff10 = [];
+    cell1 = [];
+    cell2 = [];
+
     count = 1;
-    [spike_trains,bins] = getSpikeTrain(M,1,'negative');
+    [spike_trains,bins,th] = getSpikeTrain(M,1,'negative',0.007);
     Time = [bins(1), bins(end)];
     for i = 1:len - 1
         for j = i+1:len
             spike_times1 = T_rastors(spike_trains(i,:),bins);
             spike_times2 = T_rastors(spike_trains(j,:),bins);
-            sttc_index = calcSTTC(5, Time, spike_times1, spike_times2);
+            sttc_index1 = calcSTTC(1, Time, spike_times1, spike_times2);
+            sttc_index5 = calcSTTC(5, Time, spike_times1, spike_times2);
+            sttc_index10 = calcSTTC(10, Time, spike_times1, spike_times2);
 
-            coeff = [coeff, sttc_index];
+            coeff1 = [coeff1, sttc_index1];
+            coeff5 = [coeff5, sttc_index5];
+            coeff10 = [coeff10, sttc_index10];
+
+            cell1 = [cell1, i];
+            cell2 = [cell2, j];
             count = count +1;
             %disp([num2str(count),': ',num2str(coeff)])
         end
     end
-    STTC = [STTC,coeff];
-    % fieldname = ['fov',num2str(n)];
-    % FOV_coeff.(fieldname) = coeff;
+    %------------------------------------%
+    % save individually for each FOV %
+    FOV_coeff(n).filename = ['sttc_',myFiles(n).name];
+    FOV_coeff(n).first_cell = cell1;
+    FOV_coeff(n).secnd_cell = cell2;
+    FOV_coeff(n).STTC_plusminus1 = coeff1;
+    FOV_coeff(n).STTC_plusminus5 = coeff5;
+    FOV_coeff(n).STTC_plusminus10 = coeff10;
+    %------------------------------------%
+
+    STTC = [STTC,coeff5];
     disp(['FOV ',num2str(n)])
 end
 

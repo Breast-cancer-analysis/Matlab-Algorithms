@@ -1,4 +1,4 @@
-function [spike_train,time_ax] = getSpikeTrain(signal,bin_width,polarization)
+function [spike_train,time_ax,threshold] = getSpikeTrain(signal,bin_width,polarization, threshold_val)
 %   Summary: getSpikeTrain takes in a signal matrix and outputs the spike 
 %   train & time axis. It is considered a spike when its value is n_std
 %   standard deviations away from 1. We only use the negative spike in this
@@ -15,7 +15,7 @@ function [spike_train,time_ax] = getSpikeTrain(signal,bin_width,polarization)
 %   or 0 at each bin
 %   event - time stamp of each event
 
-n_std = 2.3;
+n_std = 2.5;
 % Set sampled time axis in seconds
 samp_t = 0.2;
 time = 0:samp_t:samp_t*(length(signal)-1); % original signal is 1000s
@@ -26,19 +26,23 @@ bins = 0:bin_width:max(time);
 % Create binary spike train with time bins
 spiketrain = zeros([size(signal,1) length(bins)]);
 
+
 % negative spikes
 if strcmp(polarization,'negative')
+    % Set a threshold
+    if (threshold_val == 0)
+        sd = std(signal,0,'all');
+        threshold = 1-n_std*sd;
+    else
+        threshold = 1-threshold_val;
+    end
     % For each row of signals
     for n = 1:size(signal,1)
-        % Set a threshold
-        sd = std(signal(n,:));
-        threshold = 1-n_std*sd;
-    
         % Identify spikes in each time bin
         for i = 1:length(bins)
             bin_start = bins(i);
             bin_end = bin_start + bin_width;
-            
+
             over_threshold = sum(signal(n, time >= bin_start & time < bin_end) < threshold, 2);
             p = over_threshold/numel(time(time >= bin_start & time < bin_end));
     
@@ -46,6 +50,7 @@ if strcmp(polarization,'negative')
             if p>0.5
                 spiketrain(n,i) = 1;
             end
+                
         end
     end
 % positive spikes
