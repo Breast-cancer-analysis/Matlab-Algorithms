@@ -12,7 +12,7 @@ clc
 % wm_none_active_tcs_filt
 
 % '../468/cancer_cancer20220308_slip3_area2_long_acq_cancer20220308_slip3_area2_long_acq_blue_0.112_green_0.0673_L468_1_data.csv'
-filename = '468_none_active_tcs_filt';
+filename = 'wm_none_active_tcs_filt';
 file = strcat(['../data/',filename,'.csv']);
 name = strrep(filename,'_',' ');
 M = readmatrix(file);
@@ -28,7 +28,7 @@ time = 0:samp_t:samp_t*(length(signal)-1);
 
 % Generate spike train and time bins
 % Taking values 2.5 std less than 1
-[spike_trains,bins,th] = getSpikeTrain(signal,1,'negative',0.007);
+[spike_trains,bins,th] = getSpikeTrain(signal,1,'negative',0.0048);
 
 %%
 % Plot the rastor for the whole cell line

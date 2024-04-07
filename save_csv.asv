@@ -34,9 +34,8 @@ close all
 % T47D_none_active_tcs_filt  0.0059    has depolarisation peaks
 % wm_none_active_tcs_filt  0.0048
 
-filename = 'wm';
-th_val = 0.0048;
-
+filename = 'Cal51';
+th_val = 0.0106
 myDir = join(['/Users/treviyek/Documents/cancer_data/sorted_data/',filename]);
 myFiles = dir(fullfile(myDir,'*.csv'));
 fov_name = {};
@@ -52,7 +51,7 @@ for n = 1:length(myFiles)
 
     M = table2array(M(2:end,4:end));
     len = size(M,1);
-    [spike_trains,bins,th] = getSpikeTrain(M,1,'negative',th_val);
+    [spike_trains,bins,th] = getSpikeTrain(M,1,'negative',0.0067);
     for i = 1:len
         t_rastor = T_rastors(spike_trains(i,:),bins);
         time_stamps = [time_stamps, t_rastor];

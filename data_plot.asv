@@ -8,8 +8,8 @@ close all
 file = '/Users/treviyek/Documents/cancer_data/sorted_data/468/cancer_cancer20220315_slip1_area3_long_acq_cancer20220315_slip1_area3_long_acq_blue_0.112_green_0.0673_L468_1_data.csv';
 M = readtable(file);
 
-cell_num = split(table2array(M(2:end,3)),"_");
-cell_num=cell_num(:,end);
+% cell_num = split(table2array(M(2:end,3)),"_");
+% cell_num=cell_num(:,end);
 
 M = table2array(M(2:end,4:end));
 nlst = split(erase(file,'.csv'),'_');
@@ -21,7 +21,7 @@ total_lines = size(M,1);          % number of voltage lines
 istart = 1;                       % starting number of actual voltage line for plotting
 n_plot = ceil(total_lines/perplot);   % number of plots (max 100 lines per plot)
 s = 0.03;                         % seperation of voltage lines
-time = 0:0.2:(size(M,2)-1)*0.2;
+time = 0:0.2:length(M,2)
 
 %% seperate plot for each perplot voltage lines
 
@@ -44,7 +44,7 @@ for n=1:n_plot
     figure(n); hold on;
     for i=1:size(n_pos,2)
         data = M(n_pos(i),:) - i*s;
-        plot(time,data,'k','Linewidth',0.7);
+        plot(data,'Linewidth',0.7,'k');
         hold on
         yline(centres(i)-th,'r','LineWidth',0.7)
     end

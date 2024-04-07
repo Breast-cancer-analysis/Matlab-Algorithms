@@ -11,8 +11,8 @@ clc
 % T47D_none_active_tcs_filt  0.0059    has depolarisation peaks
 % wm_none_active_tcs_filt  0.0048
 
-filename = '468';
-th_val = 0.007;
+filename = '231';
+th_val = 0.0077;
 
 myDir = join(['/Users/treviyek/Documents/cancer_data/sorted_data/',filename]); %gets directory
 myFiles = dir(fullfile(myDir,'*.csv'));
@@ -44,8 +44,8 @@ for n = 1:length(myFiles)
     coeff1 = [];
     coeff5 = [];
     coeff10 = [];
-    % cell1 = [];
-    % cell2 = [];
+    cell1 = [];
+    cell2 = [];
 
     M = M(:,randperm(size(M, 2)));
 
@@ -64,9 +64,9 @@ for n = 1:length(myFiles)
             coeff1 = [coeff1, sttc_index1];
             coeff5 = [coeff5, sttc_index5];
             coeff10 = [coeff10, sttc_index10];
-             
-            % cell1 = [cell1, Num(i)];
-            % cell2 = [cell2, Num(j)];
+
+            cell1 = [cell1, Num(i)];
+            cell2 = [cell2, Num(j)];
             count = count +1;
             %disp([num2str(count),': ',num2str(coeff)])
         end
@@ -79,9 +79,6 @@ for n = 1:length(myFiles)
     FOV_coeff(n).STTC_plusminus1 = mean(coeff1);
     FOV_coeff(n).STTC_plusminus5 = mean(coeff5);
     FOV_coeff(n).STTC_plusminus10 = mean(coeff10);
-    FOV_coeff(n).sd1 = std(coeff1);
-    FOV_coeff(n).sd5 = std(coeff5);
-    FOV_coeff(n).sd10 = std(coeff10);
     %------------------------------------%
 
     % STTC = [STTC,coeff1];
