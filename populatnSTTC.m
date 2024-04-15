@@ -11,8 +11,8 @@ clc
 % T47D_none_active_tcs_filt  0.0059    has depolarisation peaks
 % wm_none_active_tcs_filt  0.0048
 
-filename = '468';
-th_val = 0.007;
+filename = 'MCF10A';
+% th_val = 0.007;
 
 myDir = join(['/Users/treviyek/Documents/cancer_data/sorted_data/',filename]); %gets directory
 myFiles = dir(fullfile(myDir,'*.csv'));
@@ -33,10 +33,8 @@ STTC = [];
 %%
 for n = 1:length(myFiles)
     M = readmatrix(strcat([myDir,'/',myFiles(n).name]));
-    Num = M(2:end,1);
+    % Num = M(2:end,1);
     M = M(2:end,4:end);
-    % new_ind = ind+size(M,1);
-    % ind = new_ind;
 
     len = size(M,1);
 
@@ -47,11 +45,8 @@ for n = 1:length(myFiles)
     % cell1 = [];
     % cell2 = [];
 
-    M = M(:,randperm(size(M, 2)));
-
-    count = 1;
-    [spike_trains,bins,th] = getSpikeTrain(M,1,'negative',th_val);
-    % spike_trains = spike_trains(:,randperm(size(spike_trains, 2)));
+    % count = 1;
+    [spike_trains,bins,th] = getSpikeTrain(M,1,'negative',0);
     Time = [bins(1), bins(end)];
     for i = 1:len - 1
         for j = i+1:len
@@ -67,7 +62,7 @@ for n = 1:length(myFiles)
              
             % cell1 = [cell1, Num(i)];
             % cell2 = [cell2, Num(j)];
-            count = count +1;
+            % count = count +1;
             %disp([num2str(count),': ',num2str(coeff)])
         end
     end
@@ -76,12 +71,12 @@ for n = 1:length(myFiles)
     FOV_coeff(n).filename = myFiles(n).name;
     % FOV_coeff(n).first_cell = cell1;
     % FOV_coeff(n).secnd_cell = cell2;
-    FOV_coeff(n).STTC_plusminus1 = mean(coeff1);
-    FOV_coeff(n).STTC_plusminus5 = mean(coeff5);
-    FOV_coeff(n).STTC_plusminus10 = mean(coeff10);
-    FOV_coeff(n).sd1 = std(coeff1);
-    FOV_coeff(n).sd5 = std(coeff5);
-    FOV_coeff(n).sd10 = std(coeff10);
+    FOV_coeff(n).STTC_plusminus1 = coeff1;
+    FOV_coeff(n).STTC_plusminus5 = coeff5;
+    FOV_coeff(n).STTC_plusminus10 = coeff10;
+    % FOV_coeff(n).sd1 = std(coeff1);
+    % FOV_coeff(n).sd5 = std(coeff5);
+    % FOV_coeff(n).sd10 = std(coeff10);
     %------------------------------------%
 
     % STTC = [STTC,coeff1];
